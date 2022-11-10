@@ -48,6 +48,22 @@ if (isset($_GET['content']) && !empty($_GET['content'])) {
         <?php endif; ?>
     </div>
 </div>
+<div id="reader" width="1000px"></div>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script>
+function onScanSuccess(decodedText, decodedResult) {
+        console.log(`Scan result: ${decodedText}`, decodedResult);
+        document.getElementById("barcode").value = decodedResult;
+    }
 
+    function onScanFailure(error) {
+        //console.warn(`Code scan error = ${error}`);
+    }
+    setTimeout( () => {
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }, 1000)
+</script>
 </body>
 </html>
