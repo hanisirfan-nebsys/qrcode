@@ -17,6 +17,47 @@ if (isset($_GET['content']) && !empty($_GET['content'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>PHP QR Code Generator</title>
+    <style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+    
 </head>
 
 <body class="h-screen w-full flex flex-col items-center justify-center gap-10">
@@ -24,6 +65,34 @@ if (isset($_GET['content']) && !empty($_GET['content'])) {
 <h1 class="text-5xl font-bold font-serif">
     PHP QR Code Generator
 </h1>
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'Scanner')">Scanner</button>
+  <button class="tablinks" onclick="openCity(event, 'Generator')">Generator</button>
+</div>
+
+<div id="Scanner" class="tabcontent">
+  <p><div id="reader" width="1000px"></div>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script>
+function onScanSuccess(decodedText, decodedResult) {
+        console.log(`Scan result: ${decodedText}`, decodedResult);
+        document.getElementById("barcode").value = decodedResult;
+    }
+
+    function onScanFailure(error) {
+        //console.warn(`Code scan error = ${error}`);
+    }
+    setTimeout( () => {
+        let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }, 1000)
+</script></p>
+</div>
+
+<div id="Generator" class="tabcontent">
+  <p>
 
 <div class="w-full px-28 grid grid-cols-2 gap-4">
     <div class="border border-gray-300 p-6 rounded-lg">
@@ -47,23 +116,25 @@ if (isset($_GET['content']) && !empty($_GET['content'])) {
             <img src="<?= $result ?>"/>
         <?php endif; ?>
     </div>
+</div>.</p> 
 </div>
-<div id="reader" width="1000px"></div>
-<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<script>
-function onScanSuccess(decodedText, decodedResult) {
-        console.log(`Scan result: ${decodedText}`, decodedResult);
-        document.getElementById("barcode").value = decodedResult;
-    }
 
-    function onScanFailure(error) {
-        //console.warn(`Code scan error = ${error}`);
-    }
-    setTimeout( () => {
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    }, 1000)
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
 </script>
+
+
 </body>
 </html>
